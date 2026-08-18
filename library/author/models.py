@@ -26,12 +26,7 @@ class Author(models.Model):
     id = models.AutoField(primary_key=True)
 
     def __str__(self):
-        """
-        Magic method is redefined to show all information about Author.
-        :return: author id, author name, author surname, author patronymic
-        """
-        return f"\'id\': {self.pk}, \'name\': \'{self.name}\'," \
-               f" \'surname\': \'{self.surname}\', \'patronymic\': \'{self.patronymic}\'"
+        return f"{self.name} {self.surname}"
 
     def __repr__(self):
         """

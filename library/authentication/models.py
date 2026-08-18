@@ -92,6 +92,7 @@ class CustomUser(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'middle_name']
     objects = CustomUserManager()
 
     @property
@@ -102,14 +103,38 @@ class CustomUser(AbstractBaseUser):
     def is_visitor(self):
         return self.role == self.ROLE_VISITOR
 
+    @property
+    def is_staff(self):
+        """Allows access to admin panel for librarians"""
+        return self.role == self.ROLE_LIBRARIAN
+
+    @is_staff.setter
+    def is_staff(self, value):
+        if value:
+            self.role = self.ROLE_LIBRARIAN
+
+    @property
+    def is_superuser(self):
+        """Grants all superuser permissions to librarians"""
+        return self.role == self.ROLE_LIBRARIAN
+
+    @is_superuser.setter
+    def is_superuser(self, value):
+        if value:
+            self.role = self.ROLE_LIBRARIAN
+
+    def has_perm(self, perm, obj=None):
+        """Checks permissions for a specific action"""
+        return self.role == self.ROLE_LIBRARIAN
+
+    def has_module_perms(self, app_label):
+        """Checks permissions for an app/section in the admin panel"""
+        return self.role == self.ROLE_LIBRARIAN
+
     def __str__(self):
-        """
-        Magic method is redefined to show all information about CustomUser.
-        :return: user id, user first_name, user middle_name, user last_name,
-                 user email, user password, user updated_at, user created_at,
-                 user role, user is_active
-        """
-        return f"'id': {self.id}, 'first_name': '{self.first_name}', 'middle_name': '{self.middle_name}', 'last_name': '{self.last_name}', 'email': '{self.email}', 'created_at': {int(self.created_at.timestamp())}, 'updated_at': {int(self.updated_at.timestamp())}, 'role': {self.role}, 'is_active': {self.is_active}"  # 'password': '{self.password}', \
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name} ({self.email})"
+        return self.email
 
     def __repr__(self):
         """

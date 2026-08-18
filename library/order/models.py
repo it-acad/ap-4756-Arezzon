@@ -29,24 +29,7 @@ class Order(models.Model):
     plated_end_at = models.DateTimeField(default=None)
 
     def __str__(self):
-        """
-        Magic method is redefined to show all information about Book.
-        :return: book id, book name, book description, book count, book authors
-        """
-        if self.end_at == None:
-            return f"\'id\': {self.pk}, " \
-                   f"\'user\': CustomUser(id={self.user.pk})," \
-                   f" \'book\': Book(id={self.book.pk})," \
-                   f" \'created_at\': \'{self.created_at}\'," \
-                   f" \'end_at\': {self.end_at}," \
-                   f" \'plated_end_at\': \'{self.plated_end_at}\'"
-        else:
-            return f"\'id\': {self.pk}, " \
-                   f"\'user\': CustomUser(id={self.user.pk})," \
-                   f" \'book\': Book(id={self.book.pk})," \
-                   f" \'created_at\': \'{self.created_at}\'," \
-                   f" \'end_at\': \'{self.end_at}\'," \
-                   f" \'plated_end_at\': \'{self.plated_end_at}\'"
+        return f"Order #{self.id} ({self.user.email} - {self.book.name})"
 
     def __repr__(self):
         """
